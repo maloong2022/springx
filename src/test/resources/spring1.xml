@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+
+    <bean id="userService" class="com.updownx.springx.test.bean.UserService1" scope="prototype">
+        <property name="userDao" ref="proxyUserDao"/>
+    </bean>
+    <bean id="proxyUserDao" class="com.updownx.springx.test.bean.ProxyBeanFactory"/>
+
+</beans>
