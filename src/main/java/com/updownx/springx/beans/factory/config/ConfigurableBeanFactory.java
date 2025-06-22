@@ -1,7 +1,9 @@
 package com.updownx.springx.beans.factory.config;
 
 import com.updownx.springx.beans.factory.HierarchicalBeanFactory;
+import com.updownx.springx.core.convert.ConversionService;
 import com.updownx.springx.util.StringValueResolver;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Configuration interface to be implemented by most bean factories. Provides facilities to
@@ -30,4 +32,20 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
    * @since 3.0
    */
   String resolveEmbeddedValue(String value);
+
+  /**
+   * Return the associated ConversionService, if any.
+   *
+   * @since 3.0
+   */
+  @Nullable
+  ConversionService getConversionService();
+
+  /**
+   * Specify a Spring 3.0 ConversionService to use for converting property values, as an alternative
+   * to JavaBeans PropertyEditors.
+   *
+   * @since 3.0
+   */
+  void setConversionService(ConversionService conversionService);
 }

@@ -5,6 +5,7 @@ import com.updownx.springx.beans.factory.FactoryBean;
 import com.updownx.springx.beans.factory.config.BeanDefinition;
 import com.updownx.springx.beans.factory.config.BeanPostProcessor;
 import com.updownx.springx.beans.factory.config.ConfigurableBeanFactory;
+import com.updownx.springx.core.convert.ConversionService;
 import com.updownx.springx.util.ClassUtils;
 import com.updownx.springx.util.StringValueResolver;
 import java.util.ArrayList;
@@ -21,6 +22,18 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport
 
   /** String resolvers to apply e.g. to annotation attribute values */
   private final List<StringValueResolver> embeddedValueResolvers = new ArrayList<>();
+
+  private ConversionService conversionService;
+
+  @Override
+  public ConversionService getConversionService() {
+    return conversionService;
+  }
+
+  @Override
+  public void setConversionService(ConversionService conversionService) {
+    this.conversionService = conversionService;
+  }
 
   @Override
   public Object getBean(String name) throws BeansException {

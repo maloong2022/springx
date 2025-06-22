@@ -1,12 +1,14 @@
 package com.updownx.springx.beans.factory.annotation;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.TypeUtil;
 import com.updownx.springx.beans.BeansException;
 import com.updownx.springx.beans.PropertyValues;
 import com.updownx.springx.beans.factory.BeanFactory;
 import com.updownx.springx.beans.factory.BeanFactoryAware;
 import com.updownx.springx.beans.factory.ConfigurableListableBeanFactory;
 import com.updownx.springx.beans.factory.config.InstantiationAwareBeanPostProcessor;
+import com.updownx.springx.core.convert.ConversionService;
 import com.updownx.springx.util.ClassUtils;
 import java.lang.reflect.Field;
 
@@ -42,8 +44,19 @@ public class AutowiredAnnotationBeanPostProcessor
     for (Field field : declaredFields) {
       Value valueAnnotation = field.getAnnotation(Value.class);
       if (null != valueAnnotation) {
-        String value = valueAnnotation.value();
-        value = beanFactory.resolveEmbeddedValue(value);
+        Object value = valueAnnotation.value();
+        value = beanFactory.resolveEmbeddedValue((String) value);
+
+        // 类型转换
+        Class<?> sourceType = value.getClass();
+        Class<?> targetType = (Class<?>) TypeUtil.getType(field);
+        ConversionService conversionService = beanFactory.getConversionService();
+        if (conversionService != null) {
+          if (conversionService.canConvert(sourceType, targetType)) {
+            value = conversionService.convert(value, targetType);
+          }
+        }
+
         BeanUtil.setFieldValue(bean, field.getName(), value);
       }
     }
