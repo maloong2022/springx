@@ -11,10 +11,10 @@ import com.updownx.springx.util.ClassUtils;
 import java.lang.reflect.Field;
 
 /**
- * {@link com.updownx.springx.beans.factory.config.BeanPostProcessor} implementation that
- * autowires annotated fields, setter methods and arbitrary config methods. Such members to be
- * injected are detected through a Java 5 annotation: by default, Spring's {@link
- * Autowired @Autowired} and {@link Value @Value} annotations.
+ * {@link com.updownx.springx.beans.factory.config.BeanPostProcessor} implementation that autowires
+ * annotated fields, setter methods and arbitrary config methods. Such members to be injected are
+ * detected through a Java 5 annotation: by default, Spring's {@link Autowired @Autowired} and
+ * {@link Value @Value} annotations.
  *
  * <p>处理 @Value、@Autowired，注解的 BeanPostProcessor
  *
@@ -76,6 +76,11 @@ public class AutowiredAnnotationBeanPostProcessor
   }
 
   @Override
+  public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+    return true;
+  }
+
+  @Override
   public Object postProcessBeforeInitialization(Object bean, String beanName)
       throws BeansException {
     return null;
@@ -83,6 +88,8 @@ public class AutowiredAnnotationBeanPostProcessor
 
   @Override
   public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-    return null;
+    // Bug: 返回null会影响代理对象的创建
+    // return null;
+    return bean;
   }
 }
