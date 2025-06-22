@@ -1,6 +1,7 @@
 package com.updownx.springx.context.annotation;
 
 import cn.hutool.core.util.StrUtil;
+import com.updownx.springx.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import com.updownx.springx.beans.factory.config.BeanDefinition;
 import com.updownx.springx.beans.factory.support.BeanDefinitionRegistry;
 import com.updownx.springx.stereotype.Component;
@@ -33,6 +34,10 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
         registry.registerBeanDefinition(determineBeanName(beanDefinition), beanDefinition);
       }
     }
+    // 注册处理注解的 BeanPostProcessor（@Autowired、@Value）
+    registry.registerBeanDefinition(
+        "com.updownx.springx.context.annotation.internalAutowiredAnnotationProcessor",
+        new BeanDefinition(AutowiredAnnotationBeanPostProcessor.class));
   }
 
   private String resolveBeanScope(BeanDefinition beanDefinition) {
